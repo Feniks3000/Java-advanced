@@ -19,4 +19,9 @@ public class Wall implements Obstacle {
     public String toString() {
         return "Стена высотой " + height + " метров";
     }
+
+    @Override
+    public Boolean doIt(Sportable sportable) {
+        return sportable.jump(height);
+    }
 }

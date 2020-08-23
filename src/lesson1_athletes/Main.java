@@ -26,7 +26,7 @@ public class Main {
             System.out.printf("\n\n%s приступил к прохождению полосы препятствий\n", hero.getName());
             int step = 0;
             for (Obstacle obstacle : obstacles) {
-                if (hero.overcome(obstacle)) {
+                if (obstacle.doIt(hero)) {
                     step++;
                 } else {
                     System.out.printf("%s выбыл из соревнований, потому что ему не покорилась %s\n", hero.getName(), obstacle);

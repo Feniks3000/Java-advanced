@@ -19,4 +19,9 @@ public class Treadmill implements Obstacle {
     public String toString() {
         return "Беговая дорожка на " + distance + " метров";
     }
+
+    @Override
+    public Boolean doIt(Sportable sportable) {
+        return sportable.run(distance);
+    }
 }
