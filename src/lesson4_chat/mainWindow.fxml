@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import java.net.URL?>
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/11.0.1" fx:controller="lesson4_chat.Controller">
+    <stylesheets>
+        <URL value="@/lesson4_chat/mainWindow.css" />
+    </stylesheets>
+    <center>
+        <TextArea editable="false" wrapText="true" fx:id="history" focusTraversable="false"/>
+    </center>
+    <bottom>
+            <TextField fx:id="message" focusTraversable="true" onAction="#sendMessage"/>
+    </bottom>
+</BorderPane>

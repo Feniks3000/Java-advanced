@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import java.net.URL?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.control.Button?>
+<GridPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/11.0.1"
+          fx:controller="lesson4_calc.Controller" hgap="2" vgap="1">
+    <stylesheets>
+        <URL value="@/lesson4_calc/calc.css" />
+    </stylesheets>
+    <GridPane GridPane.rowIndex="0" GridPane.columnIndex="0" hgap="1" vgap="4">
+        <TextField GridPane.rowIndex="0" GridPane.columnIndex="0" editable="true" fx:id="firstValue"/>
+        <TextField GridPane.rowIndex="1" GridPane.columnIndex="0" editable="true" fx:id="secondValue"/>
+        <GridPane GridPane.rowIndex="2" GridPane.columnIndex="0" vgap="2" hgap="4">
+            <Button minWidth="70" text="+" GridPane.rowIndex="0" GridPane.columnIndex="0" fx:id="additionButton" onAction="#additionOperation"/>
+            <Button minWidth="70" text="-" GridPane.rowIndex="0" GridPane.columnIndex="1" fx:id="subtractionButton" onAction="#subtractionOperation"/>
+            <Button minWidth="70" text="*" GridPane.rowIndex="0" GridPane.columnIndex="2" fx:id="multiplicationButton" onAction="#multiplicationOperation"/>
+            <Button minWidth="70" text="/" GridPane.rowIndex="0" GridPane.columnIndex="3" fx:id="divisionButton" onAction="#divisionOperation"/>
+            <Button minWidth="70" text="1/x" GridPane.rowIndex="1" GridPane.columnIndex="0" fx:id="specButton1" onAction="#specOperation1"/>
+            <Button minWidth="70" text="x^2" GridPane.rowIndex="1" GridPane.columnIndex="1" fx:id="specButton2" onAction="#specOperation2"/>
+            <Button minWidth="70" text="sqrt(x)" GridPane.rowIndex="1" GridPane.columnIndex="2" fx:id="specButton3" onAction="#specOperation3"/>
+            <Button minWidth="70" text="x!" GridPane.rowIndex="1" GridPane.columnIndex="3" fx:id="specButton4" onAction="#specOperation4"/>
+        </GridPane>
+        <TextField GridPane.rowIndex="3" GridPane.columnIndex="0" fx:id="resultValue" editable="false"/>
+    </GridPane>
+    <TextArea GridPane.rowIndex="0" GridPane.columnIndex="1" editable="false" wrapText="true" fx:id="history"/>
+</GridPane>
