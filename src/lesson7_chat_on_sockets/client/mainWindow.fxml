@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import java.net.URL?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.Button?>
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/11.0.1" fx:controller="lesson7_chat_on_sockets.client.Controller">
+    <stylesheets>
+        <URL value="@/lesson7_chat_on_sockets/client/mainWindow.css" />
+    </stylesheets>
+    <top>
+        <HBox fx:id="authPanel" visible="true" managed="true">
+            <TextField fx:id="loginField" promptText="login" HBox.hgrow="ALWAYS"/>
+            <PasswordField fx:id="passField" promptText="password" HBox.hgrow="ALWAYS" onAction="#tryToAuth"/>
+            <Button text="GO" onAction="#tryToAuth" minWidth="50"/>
+        </HBox>
+    </top>
+    <center>
+        <TextArea editable="false" wrapText="true" fx:id="history" focusTraversable="false"/>
+    </center>
+    <bottom>
+        <HBox fx:id="sendPanel" visible="false" managed="false">
+            <TextField fx:id="messageField" promptText="Введи сообщение" HBox.hgrow="ALWAYS" onAction="#sendMessage"/>
+        </HBox>
+    </bottom>
+</BorderPane>
