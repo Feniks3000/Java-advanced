@@ -32,16 +32,20 @@ public class ClientHandler {
                 authorization(server);
                 while (true) {
                     String message = in.readUTF();
-                    if (message.equals("/end")) {
-                        break;
-                    }
-                    if (message.startsWith("/for ")) {
-                        String[] command = message.split("\\s", 3);
-                        if (server.clientExits(command[1])) {
-                            server.privateMessage(command[1], String.format("Личное сообщение от %s (%s):\t %s", login, simpleDateFormat.format(new Date()), command[2]));
-                        } else {
-                            sendMessage(String.format("Пользователь %s не найден. Сообщение не отправлено", command[1]));
+                    if (message.startsWith("/")) {
+                        if (message.equals("/end")) {
+                            break;
                         }
+                        if (message.startsWith("/for ")) {
+                            String[] command = message.split("\\s+", 3);
+                            if (command.length < 3) {
+                                sendMessage("Недопустимый формат команды. Ожидалось сообщение вида '/for login message'");
+                                continue;
+                            }
+                            server.privateMessage(this, command[1], String.format("%s лично для %s (%s):\t %s", login, command[1], simpleDateFormat.format(new Date()), command[2]));
+                            continue;
+                        }
+                        sendMessage("Служебное сообщение данного вида не найдено");
                     } else {
                         server.broadcastMessage(String.format("%s (%s):\t %s", login, simpleDateFormat.format(new Date()), message));
                     }

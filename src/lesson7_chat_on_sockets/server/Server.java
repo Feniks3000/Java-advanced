@@ -55,8 +55,16 @@ public class Server {
         }
     }
 
-    public void privateMessage(String recipient, String message) {
-        getClientByLogin(recipient).sendMessage(message);
+    public void privateMessage(ClientHandler client, String recipient, String message) {
+        if (clientExits(recipient)) {
+            ClientHandler receiver = getClientByLogin(recipient);
+            getClientByLogin(recipient).sendMessage(message);
+            if (!receiver.equals(client)) {
+                client.sendMessage(message);
+            }
+        } else {
+            client.sendMessage(String.format("Пользователь %s не найден. Сообщение не отправлено", recipient));
+        }
     }
 
     public void subscribe(ClientHandler client) {
