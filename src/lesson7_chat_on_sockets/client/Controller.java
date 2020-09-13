@@ -41,9 +41,22 @@ public class Controller implements Initializable {
     private Socket socket;
     private DataInputStream in;
     private DataOutputStream out;
+    private Stage stage;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        Platform.runLater(() -> {
+            stage = (Stage) messageField.getScene().getWindow();
+            stage.setOnCloseRequest(event -> {
+                if (socket != null && !socket.isClosed()) {
+                    try {
+                        out.writeUTF("/end");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        });
         setAuthenticated(false);
     }
     public void setAuthenticated(boolean authenticated) {
@@ -57,12 +70,13 @@ public class Controller implements Initializable {
             setTitle("Simple chat for " + loginField.getText().trim().toLowerCase());
         } else {
             setTitle("Simple chat");
+            history.clear();
         }
     }
 
     private void setTitle(String title) {
         Platform.runLater(() -> {
-            ((Stage) authPanel.getScene().getWindow()).setTitle(title);
+            stage.setTitle(title);
         });
     }
 

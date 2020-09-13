@@ -29,25 +29,26 @@ public class ClientHandler {
 
         new Thread(() -> {
             try {
-                authorization(server);
-                while (true) {
-                    String message = in.readUTF();
-                    if (message.startsWith("/")) {
-                        if (message.equals("/end")) {
-                            break;
-                        }
-                        if (message.startsWith("/for ")) {
-                            String[] command = message.split("\\s+", 3);
-                            if (command.length < 3) {
-                                sendMessage("Недопустимый формат команды. Ожидалось сообщение вида '/for login message'");
+                if (authorization(server)) {
+                    while (true) {
+                        String message = in.readUTF();
+                        if (message.startsWith("/")) {
+                            if (message.equals("/end")) {
+                                break;
+                            }
+                            if (message.startsWith("/for ")) {
+                                String[] command = message.split("\\s+", 3);
+                                if (command.length < 3) {
+                                    sendMessage("Недопустимый формат команды. Ожидалось сообщение вида '/for login message'");
+                                    continue;
+                                }
+                                server.privateMessage(this, command[1], String.format("%s лично для %s (%s):\t %s", login, command[1], simpleDateFormat.format(new Date()), command[2]));
                                 continue;
                             }
-                            server.privateMessage(this, command[1], String.format("%s лично для %s (%s):\t %s", login, command[1], simpleDateFormat.format(new Date()), command[2]));
-                            continue;
+                            sendMessage("Служебное сообщение данного вида не найдено");
+                        } else {
+                            server.broadcastMessage(String.format("%s (%s):\t %s", login, simpleDateFormat.format(new Date()), message));
                         }
-                        sendMessage("Служебное сообщение данного вида не найдено");
-                    } else {
-                        server.broadcastMessage(String.format("%s (%s):\t %s", login, simpleDateFormat.format(new Date()), message));
                     }
                 }
             } catch (IOException e) {
@@ -63,7 +64,7 @@ public class ClientHandler {
         }).start();
     }
 
-    private void authorization(Server server) throws IOException {
+    private boolean authorization(Server server) throws IOException {
         while (true) {
             String message = in.readUTF();
             if (message.startsWith("/auth ")) {
@@ -73,13 +74,13 @@ public class ClientHandler {
                     login = token[1];
                     server.subscribe(this);
                     sendMessage("/authOk");
-                    break;
+                    return true;
                 } else if (server.getAuthService().userExist(token[1], token[2])) {
                     if (!server.clientExits(token[1])) {
                         login = token[1];
                         sendMessage("/authOk");
                         server.subscribe(this);
-                        break;
+                        return true;
                     } else {
                         System.out.printf("%s пытается открыть чат в другом окне\n", token[1]);
                         sendMessage(String.format("%s вы уже аторизованы в другом окне\n", token[1]));
@@ -88,6 +89,9 @@ public class ClientHandler {
                     System.out.printf("%s ввел неверный пароль\n", token[1]);
                     sendMessage("Неверный логин / пароль");
                 }
+            }
+            if (message.equals("/end")) {
+                return false;
             }
         }
     }
