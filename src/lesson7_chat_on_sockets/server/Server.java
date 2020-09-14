@@ -45,10 +45,6 @@ public class Server {
         return authService;
     }
 
-    public void removeClient(ClientHandler client) {
-        clients.remove(client);
-    }
-
     public void broadcastMessage(String message) {
         System.out.println(message);
         for (ClientHandler client : clients) {
@@ -83,9 +79,11 @@ public class Server {
     }
 
     public void unsubscribe(ClientHandler client) {
-        clients.remove(client);
-        broadcastMessage(String.format("=> Чат покинул %s", client.getLogin()));
-        broadcastClientList();
+        if (clients.contains(client)) {
+            clients.remove(client);
+            broadcastMessage(String.format("=> Чат покинул %s", client.getLogin()));
+            broadcastClientList();
+        }
     }
 
     public boolean clientExits(String login) {

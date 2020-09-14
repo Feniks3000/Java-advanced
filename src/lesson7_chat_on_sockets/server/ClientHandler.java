@@ -4,6 +4,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
@@ -30,6 +31,7 @@ public class ClientHandler {
         new Thread(() -> {
             try {
                 if (authorization(server)) {
+                    socket.setSoTimeout(0);
                     while (true) {
                         String message = in.readUTF();
                         if (message.startsWith("/")) {
@@ -51,6 +53,8 @@ public class ClientHandler {
                         }
                     }
                 }
+            } catch (SocketTimeoutException e) {
+                System.out.println("Сокет закрыт по таймауту");
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
@@ -65,6 +69,7 @@ public class ClientHandler {
     }
 
     private boolean authorization(Server server) throws IOException {
+        socket.setSoTimeout(60000);
         while (true) {
             String message = in.readUTF();
             if (message.startsWith("/auth ")) {
