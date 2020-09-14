@@ -78,14 +78,14 @@ public class Server {
 
     public void subscribe(ClientHandler client) {
         clients.add(client);
-        broadcastClientList();
         broadcastMessage(String.format("=> В чат вошел %s", client.getLogin()));
+        broadcastClientList();
     }
 
     public void unsubscribe(ClientHandler client) {
         clients.remove(client);
-        broadcastClientList();
         broadcastMessage(String.format("=> Чат покинул %s", client.getLogin()));
+        broadcastClientList();
     }
 
     public boolean clientExits(String login) {

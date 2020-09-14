@@ -65,6 +65,7 @@ public class Controller implements Initializable {
         });
         setAuthenticated(false);
     }
+
     public void setAuthenticated(boolean authenticated) {
         this.authenticated = authenticated;
         authPanel.setVisible(!authenticated);
@@ -85,11 +86,12 @@ public class Controller implements Initializable {
     private void setTitle(String title) {
         Platform.runLater(() -> {
             stage.setTitle(title);
+            clients.getItems().clear();
         });
     }
 
     public void tryToAuth(ActionEvent actionEvent) {
-        if(socket == null || socket.isClosed()){
+        if (socket == null || socket.isClosed()) {
             connectTo("localhost", 8189);
         }
 
@@ -113,7 +115,7 @@ public class Controller implements Initializable {
         }
     }
 
-    private void connectTo(String ip, int port){
+    private void connectTo(String ip, int port) {
         try {
             socket = new Socket(ip, port);
             in = new DataInputStream(socket.getInputStream());
@@ -194,5 +196,13 @@ public class Controller implements Initializable {
     }
 
     public void clickOnClients(MouseEvent mouseEvent) {
+        String receiver = clients.getSelectionModel().getSelectedItem();
+        if (!receiver.equals("null")) {
+            messageField.setText(String.format("/for %s ", receiver));
+            messageField.requestFocus();
+            messageField.selectEnd();
+        } else {
+            messageField.clear();
+        }
     }
 }

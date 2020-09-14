@@ -72,8 +72,8 @@ public class ClientHandler {
                 if (!server.getAuthService().loginBusy(token[1])) {
                     server.getAuthService().addUser(token[1], token[2]);
                     login = token[1];
-                    server.subscribe(this);
                     sendMessage("/authOk");
+                    server.subscribe(this);
                     return true;
                 } else if (server.getAuthService().userExist(token[1], token[2])) {
                     if (!server.clientExits(token[1])) {
