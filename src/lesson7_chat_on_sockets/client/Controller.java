@@ -4,9 +4,11 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ListView;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import org.apache.commons.lang3.StringUtils;
@@ -19,7 +21,9 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
@@ -35,6 +39,8 @@ public class Controller implements Initializable {
     public TextField messageField;
     @FXML
     public TextArea history;
+    @FXML
+    public ListView<String> clients;
 
     private boolean authenticated;
 
@@ -65,6 +71,8 @@ public class Controller implements Initializable {
         authPanel.setManaged(!authenticated);
         sendPanel.setVisible(authenticated);
         sendPanel.setManaged(authenticated);
+        clients.setVisible(authenticated);
+        clients.setManaged(authenticated);
 
         if (authenticated) {
             setTitle("Simple chat for " + loginField.getText().trim().toLowerCase());
@@ -123,11 +131,18 @@ public class Controller implements Initializable {
                     }
                     while (true) {
                         String message = in.readUTF();
-                        if (message.equals("/end")) {
-                            printMessage("Чат завершен");
-                            break;
+                        if (message.startsWith("/")) {
+                            if (message.equals("/end")) {
+                                printMessage("Чат завершен");
+                                break;
+                            }
+                            if (message.startsWith("/clients ")) {
+                                String[] clients = message.substring(9).split("\\s+");
+                                updateClients(clients);
+                            }
+                        } else {
+                            printMessage(message);
                         }
-                        printMessage(message);
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -144,6 +159,13 @@ public class Controller implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void updateClients(String[] clients) {
+        Platform.runLater(() -> {
+            this.clients.getItems().clear();
+            this.clients.getItems().addAll(Arrays.asList(clients));
+        });
     }
 
     public void sendMessage() {
@@ -171,4 +193,6 @@ public class Controller implements Initializable {
         }
     }
 
+    public void clickOnClients(MouseEvent mouseEvent) {
+    }
 }

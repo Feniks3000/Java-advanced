@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Vector;
@@ -55,6 +56,14 @@ public class Server {
         }
     }
 
+    private void broadcastClientList() {
+        StringBuilder clientList = new StringBuilder("/clients ");
+        for (ClientHandler client : clients) {
+            clientList.append(client.getLogin()).append(" ");
+        }
+        broadcastMessage(clientList.toString());
+    }
+
     public void privateMessage(ClientHandler client, String recipient, String message) {
         if (clientExits(recipient)) {
             ClientHandler receiver = getClientByLogin(recipient);
@@ -69,11 +78,13 @@ public class Server {
 
     public void subscribe(ClientHandler client) {
         clients.add(client);
+        broadcastClientList();
         broadcastMessage(String.format("=> В чат вошел %s", client.getLogin()));
     }
 
     public void unsubscribe(ClientHandler client) {
         clients.remove(client);
+        broadcastClientList();
         broadcastMessage(String.format("=> Чат покинул %s", client.getLogin()));
     }
 
