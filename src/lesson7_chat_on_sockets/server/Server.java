@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Vector;
@@ -44,10 +45,6 @@ public class Server {
         return authService;
     }
 
-    public void removeClient(ClientHandler client) {
-        clients.remove(client);
-    }
-
     public void broadcastMessage(String message) {
         System.out.println(message);
         for (ClientHandler client : clients) {
@@ -55,18 +52,38 @@ public class Server {
         }
     }
 
-    public void privateMessage(String recipient, String message) {
-        getClientByLogin(recipient).sendMessage(message);
+    private void broadcastClientList() {
+        StringBuilder clientList = new StringBuilder("/clients ");
+        for (ClientHandler client : clients) {
+            clientList.append(client.getLogin()).append(" ");
+        }
+        broadcastMessage(clientList.toString());
+    }
+
+    public void privateMessage(ClientHandler client, String recipient, String message) {
+        if (clientExits(recipient)) {
+            ClientHandler receiver = getClientByLogin(recipient);
+            getClientByLogin(recipient).sendMessage(message);
+            if (!receiver.equals(client)) {
+                client.sendMessage(message);
+            }
+        } else {
+            client.sendMessage(String.format("Пользователь %s не найден. Сообщение не отправлено", recipient));
+        }
     }
 
     public void subscribe(ClientHandler client) {
         clients.add(client);
         broadcastMessage(String.format("=> В чат вошел %s", client.getLogin()));
+        broadcastClientList();
     }
 
     public void unsubscribe(ClientHandler client) {
-        clients.remove(client);
-        broadcastMessage(String.format("=> Чат покинул %s", client.getLogin()));
+        if (clients.contains(client)) {
+            clients.remove(client);
+            broadcastMessage(String.format("=> Чат покинул %s", client.getLogin()));
+            broadcastClientList();
+        }
     }
 
     public boolean clientExits(String login) {

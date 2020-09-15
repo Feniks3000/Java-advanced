@@ -12,12 +12,12 @@ public class StartClient extends Application {
     public void start(Stage primaryStage) throws Exception{
         Parent root = FXMLLoader.load(getClass().getResource("mainWindow.fxml"));
         primaryStage.setTitle("Simple chat");
-        primaryStage.setScene(new Scene(root, 500, 400));
+        primaryStage.setScene(new Scene(root, 550, 400));
         primaryStage.setMinWidth(500);
         primaryStage.setMinHeight(400);
-        primaryStage.setOnCloseRequest(event -> {
-            System.exit(0);
-        });
+//        primaryStage.setOnCloseRequest(event -> {
+//            System.exit(0);
+//        });
         primaryStage.show();
     }
 
