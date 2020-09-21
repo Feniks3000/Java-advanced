@@ -125,6 +125,10 @@ public class Controller implements Initializable {
                 try {
                     while (true) {
                         String message = in.readUTF();
+                        if (message.equals("/end")) {
+                            throw new RuntimeException("Сервер закрыл соединение без авторизации");
+
+                        }
                         if (message.equals("/authOk")) {
                             setAuthenticated(true);
                             break;
@@ -146,8 +150,8 @@ public class Controller implements Initializable {
                             printMessage(message);
                         }
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
+                } catch (RuntimeException | IOException e) {
+                    //e.printStackTrace();
                 } finally {
                     System.out.println("Мы отключились от сервера");
                     setAuthenticated(false);

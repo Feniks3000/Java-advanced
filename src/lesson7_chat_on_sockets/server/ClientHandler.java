@@ -54,6 +54,7 @@ public class ClientHandler {
                     }
                 }
             } catch (SocketTimeoutException e) {
+                sendMessage("/end");
                 System.out.println("Сокет закрыт по таймауту");
             } catch (IOException e) {
                 e.printStackTrace();
